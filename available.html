@@ -44,27 +44,22 @@
 <!-- PAGE HERO -->
 <div class="page-hero">
   <h1>Available Units</h1>
-  <p>Live listings — updated automatically from our property management system</p>
+  <p>Live listings &#8212; updated automatically from our property management system</p>
 </div>
 
 <!-- MAIN CONTENT -->
 <section class="section">
   <div class="container">
-
-    <!-- COUNT BAR -->
     <div class="count-bar">
       <p id="unit-count">Loading available units...</p>
       <a href="index.html#contact" class="btn-outline-sm">&#128222; Contact Us</a>
     </div>
-
-    <!-- UNITS GRID -->
     <div id="units-container">
       <div class="loading">
         <div class="spinner"></div>
         <p>Fetching available units from our system...</p>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -95,101 +90,79 @@
 </footer>
 
 <script>
-(function(){
-  function getRentRange(rent){
-    if(!rent||isNaN(rent))return'';
-    const r=parseFloat(rent);
-    if(r<700)return'budget';
-    if(r<1200)return'mid';
-    return'premium';
+(function() {
+  var container = document.getElementById("units-container");
+  var countEl = document.getElementById("unit-count");
+
+  function esc(s) {
+    return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   }
 
-  function buildCard(unit){
-    const cols=unit.column_values||[];
-    function col(id){const c=cols.find(x=>x.id===id);return c?c.text||'':'';}
-    function colVal(id){const c=cols.find(x=>x.id===id);return c?c.value||'':'';}
+  function buildCard(u) {
+    var photoHtml = "";
+    if (u.photos) {
+      photoHtml = "<div class=\"unit-photo\"><img src=\"" + esc(u.photos) + "\" alt=\"" + esc(u.name) + "\" loading=\"lazy\" onerror=\"this.parentElement.className='unit-photo-placeholder';this.parentElement.innerHTML='&#127968;<span>No Photo</span>'\"></div>";
+    } else {
+      photoHtml = "<div class=\"unit-photo-placeholder\">&#127968;<span>Photo Coming Soon</span></div>";
+    }
 
-    const rent=col('numeric_mkzgbed3');
-    const utilities=col('numeric_mkzh5w7b');
-    const beds=col('dropdown_mm0v4ghw');
-    const baths=col('dropdown_mm0vynpz');
-    const sqft=col('numeric_mkzgkq2v');
-    const notes=col('text_mkzmhewt');
-    const laundry=col('color_mkzgqssa');
-    const listingType=col('color_mm0t3ttz');
-    const singleUnit=col('color_mkzgy5pt');
-    const renovation=col('text_mm35ajak');
+    var specs = "";
+    if (u.beds) specs += "<span class=\"unit-spec\"><strong>" + esc(u.beds) + "</strong> bed</span>";
+    if (u.baths) specs += "<span class=\"unit-spec\"><strong>" + esc(u.baths) + "</strong> bath</span>";
+    if (u.sqft) specs += "<span class=\"unit-spec\"><strong>" + esc(u.sqft) + "</strong> sqft</span>";
 
-    // Photos
-    let photoURL='';
-    try{
-      const lv=colVal('link_mkzgjgh3');
-      if(lv){const lp=JSON.parse(lv);if(lp.url)photoURL=lp.url;}
-    }catch(e){}
+    var rentNum = parseFloat(u.rent) || 0;
+    var utNum = parseFloat(u.utilities) || 0;
+    var priceHtml = "";
+    if (rentNum > 0) {
+      priceHtml = "<div class=\"unit-price\">$" + rentNum.toLocaleString() + "<span>/mo rent</span>";
+      if (utNum > 0) priceHtml += " &nbsp;+&nbsp; $" + utNum + "<span>/mo utils</span>";
+      priceHtml += "</div>";
+    }
 
-    // Video
-    let videoURL='';
-    try{
-      const vv=colVal('link_mkzgbc3f');
-      if(vv){const vp=JSON.parse(vv);if(vp.url)videoURL=vp.url;}
-    }catch(e){}
+    var badges = "";
+    if (u.laundry && u.laundry !== "No" && u.laundry !== "-" && u.laundry !== "None") badges += "<span class=\"badge badge-laundry\">&#128085; " + esc(u.laundry) + "</span>";
+    if (u.listingType && u.listingType !== "-") badges += "<span class=\"badge badge-type\">" + esc(u.listingType) + "</span>";
+    if (u.type && u.type !== "-" && u.type !== "Unit") badges += "<span class=\"badge\">" + esc(u.type) + "</span>";
+    if (u.renovation && u.renovation !== "-") badges += "<span class=\"badge\">Renovated: " + esc(u.renovation) + "</span>";
 
-    const rentNum=parseFloat(rent)||0;
-    const utNum=parseFloat(utilities)||0;
+    var actions = "<a href=\"mailto:management@northernholding.com?subject=Inquiry: " + encodeURIComponent(u.name) + "\" class=\"btn btn-primary btn-sm\">Inquire</a>";
+    if (u.video) actions += " <a href=\"" + esc(u.video) + "\" target=\"_blank\" rel=\"noopener\" class=\"btn-outline-sm\">&#127909; Video</a>";
+    if (u.photos) actions += " <a href=\"" + esc(u.photos) + "\" target=\"_blank\" rel=\"noopener\" class=\"btn-outline-sm\">&#128247; Photos</a>";
 
-    const photoSection=photoURL
-      ?'<div class="unit-photo"><img src="'+photoURL+'" alt="'+unit.name+'" loading="lazy" onerror="this.parentElement.innerHTML='<div class=unit-photo-placeholder>&#127968;<span>No Photo</span></div>'"></div>'
-      :'<div class="unit-photo-placeholder">&#127968;<span>Photo Coming Soon</span></div>';
-
-    const badges=[];
-    if(laundry&&laundry!=='None'&&laundry!=='-')badges.push('<span class="badge badge-laundry">&#128085; '+laundry+'</span>');
-    if(listingType&&listingType!=='-')badges.push('<span class="badge badge-type">'+listingType+'</span>');
-    if(singleUnit&&singleUnit!=='-'&&singleUnit!=='Unit')badges.push('<span class="badge">'+singleUnit+'</span>');
-    if(renovation&&renovation!=='-')badges.push('<span class="badge">Renovated: '+renovation+'</span>');
-
-    const actionBtns='<a href="mailto:management@northernholding.com?subject=Inquiry: '+encodeURIComponent(unit.name)+'" class="btn btn-primary btn-sm">Inquire</a>'
-      +(videoURL?'<a href="'+videoURL+'" target="_blank" rel="noopener" class="btn-outline-sm">&#127909; Video</a>':'')
-      +(photoURL?'<a href="'+photoURL+'" target="_blank" rel="noopener" class="btn-outline-sm">&#128247; Photos</a>':'');
-
-    return '<div class="unit-card">'
-      +photoSection
-      +'<div class="unit-info">'
-        +'<div class="unit-name">'+unit.name+'</div>'
-        +(listingType?'<div class="unit-type">'+listingType+'</div>':'')
-        +'<div class="unit-specs">'
-          +(beds?'<span class="unit-spec"><strong>'+beds+'</strong> bed</span>':'')
-          +(baths?'<span class="unit-spec"><strong>'+baths+'</strong> bath</span>':'')
-          +(sqft?'<span class="unit-spec"><strong>'+sqft+'</strong> sqft</span>':'')
-        +'</div>'
-        +(rentNum>0?'<div class="unit-price">$'+rentNum.toLocaleString()+'<span>/mo rent</span>'+(utNum>0?' &nbsp;+&nbsp;$'+utNum+'<span>/mo utils</span>':'')+'</div>':'')
-        +(notes?'<div class="unit-notes">'+notes+'</div>':'')
-        +(badges.length?'<div class="unit-badges">'+badges.join('')+'</div>':'')
-        +'<div class="unit-actions">'+actionBtns+'</div>'
-      +'</div>'
-    +'</div>';
+    return "<div class=\"unit-card\">"
+      + photoHtml
+      + "<div class=\"unit-info\">"
+        + "<div class=\"unit-name\">" + esc(u.name) + "</div>"
+        + (u.listingType ? "<div class=\"unit-type\">" + esc(u.listingType) + "</div>" : "")
+        + "<div class=\"unit-specs\">" + specs + "</div>"
+        + priceHtml
+        + (u.notes ? "<div class=\"unit-notes\">" + esc(u.notes) + "</div>" : "")
+        + (badges ? "<div class=\"unit-badges\">" + badges + "</div>" : "")
+        + "<div class=\"unit-actions\">" + actions + "</div>"
+      + "</div>"
+    + "</div>";
   }
 
-  const container=document.getElementById('units-container');
-  const countEl=document.getElementById('unit-count');
-
-  fetch('/api/units')
-    .then(function(r){
-      if(!r.ok)throw new Error('HTTP '+r.status);
+  fetch("/api/units")
+    .then(function(r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
     })
-    .then(function(units){
-      if(!Array.isArray(units)||units.length===0){
-        container.innerHTML='<div class="no-units"><h3>No Units Currently Available</h3><p>We don't have any vacant units right now. Please check back soon or contact us to be added to our waiting list.</p><br><a href="index.html#contact" class="btn btn-primary">Contact Us</a></div>';
-        if(countEl)countEl.textContent='No units available at this time.';
+    .then(function(data) {
+      var units = Array.isArray(data) ? data : (data.units || []);
+      if (units.length === 0) {
+        container.innerHTML = "<div class=\"no-units\"><h3>No Units Currently Available</h3><p>Please check back soon or contact us to join our waiting list.</p><br><a href=\"index.html#contact\" class=\"btn btn-primary\">Contact Us</a></div>";
+        countEl.textContent = "No units available at this time.";
         return;
       }
-      if(countEl)countEl.textContent=units.length+' unit'+(units.length!==1?'s':'')+' available';
-      container.innerHTML='<div class="units-grid">'+units.map(buildCard).join('')+'</div>';
+      countEl.textContent = units.length + " unit" + (units.length !== 1 ? "s" : "") + " available";
+      container.innerHTML = "<div class=\"units-grid\">" + units.map(buildCard).join("") + "</div>";
     })
-    .catch(function(err){
-      container.innerHTML='<div class="error-msg">Unable to load listings. Please try again or <a href="index.html#contact">contact us</a> directly.</div>';
-      if(countEl)countEl.textContent='';
-      console.error('Units API error:',err);
+    .catch(function(err) {
+      container.innerHTML = "<div class=\"error-msg\">Unable to load listings. Please try again or <a href=\"index.html#contact\">contact us</a> directly.</div>";
+      countEl.textContent = "";
+      console.error("Units fetch error:", err);
     });
 })();
 </script>
