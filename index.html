@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Northern Holding - Property Management</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<div class="topbar">
+<span>&#128222; (231) 412-0630</span>
+<span>&#128205; Northern Michigan</span>
+<span>management@northernholding.com</span>
+</div>
+<header class="navbar">
+<div class="navbar-inner">
+<a href="index.html" class="logo"><span class="logo-icon">&#127968;</span><span class="logo-text">Northern <strong>Holding</strong></span></a>
+<nav class="nav-links">
+<a href="index.html" class="active">Home</a>
+<a href="available.html">Available Units</a>
+<a href="#residents">Residents</a>
+<a href="#apply">Apply to Rent</a>
+<a href="#contact">Contact</a>
+</nav>
+<button class="mobile-menu-btn" onclick="document.getElementById('mn').classList.toggle('open')">&#9776;</button>
+</div>
+<nav class="mobile-nav" id="mn">
+<a href="index.html">Home</a>
+<a href="available.html">Available Units</a>
+<a href="#apply">Apply to Rent</a>
+<a href="#contact">Contact</a>
+</nav>
+</header>
+<section class="hero">
+<div class="hero-overlay"></div>
+<div class="hero-content">
+<h1>Quality Homes Across Northern Michigan</h1>
+<p>Single-family homes and apartments - well-maintained, professionally managed.</p>
+<div class="hero-buttons">
+<a href="available.html" class="btn btn-primary">View Available Units</a>
+<a href="#contact" class="btn btn-outline">Contact Us</a>
+</div>
+</div>
+</section>
+<section class="stats-bar">
+<div class="stat"><span class="stat-num">97+</span><span class="stat-label">Managed Units</span></div>
+<div class="stat"><span class="stat-num">10+</span><span class="stat-label">Communities</span></div>
+<div class="stat"><span class="stat-num">24/7</span><span class="stat-label">Support</span></div>
+<div class="stat"><span class="stat-num">100%</span><span class="stat-label">Professional</span></div>
+</section>
+<section class="section" id="available-preview">
+<div class="container">
+<div class="section-header"><h2>Available Units</h2><p>Currently vacant - updated automatically from our management system.</p></div>
+<div id="preview-units" class="units-grid"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div>
+<div class="section-cta"><a href="available.html" class="btn btn-primary">See All Available Units</a></div>
+</div>
+</section>
+<section class="section section-dark" id="services">
+<div class="container">
+<div class="section-header light"><h2>Our Services</h2><p>Everything you need from finding a home to getting help fast.</p></div>
+<div class="services-grid">
+<div class="service-card"><div class="service-icon">&#127968;</div><h3>Quality Rentals</h3><p>Homes and apartments across Northern Michigan maintained to a high standard.</p></div>
+<div class="service-card"><div class="service-icon">&#128203;</div><h3>Easy Application</h3><p>Simple online rental application. Apply for any available unit in minutes.</p><a href="#apply" class="btn btn-sm">Apply Now</a></div>
+<div class="service-card"><div class="service-icon">&#128295;</div><h3>Maintenance</h3><p>Fast response to maintenance requests. We keep your home in great shape.</p></div>
+<div class="service-card"><div class="service-icon">&#128179;</div><h3>Pay Rent Online</h3><p>Convenient online rent payment coming soon for all current tenants.</p></div>
+</div>
+</div>
+</section>
+<section class="section" id="residents">
+<div class="container two-col">
+<div class="col-text">
+<h2>Current Residents</h2>
+<p>As a Northern Holding resident you have access to support and services including:</p>
+<ul class="feature-list">
+<li>&#9989; Online rent payment (coming soon)</li>
+<li>&#9989; Maintenance request submission</li>
+<li>&#9989; Lease document access</li>
+<li>&#9989; Direct communication with management</li>
+</ul>
+<a href="#contact" class="btn btn-primary">Contact Management</a>
+</div>
+<div class="col-image">
+<div class="image-placeholder"><span>&#127968;</span><p>Resident Services</p><p class="sub">Contact us for support</p></div>
+</div>
+</div>
+</section>
+<section class="section section-accent" id="apply">
+<div class="container">
+<div class="section-header"><h2>Apply to Rent</h2><p>Interested in one of our units? Fill out the form below and we will be in touch.</p></div>
+<form class="apply-form" onsubmit="submitApp(event)">
+<div class="form-row">
+<div class="form-group"><label>First Name</label><input type="text" placeholder="John" required/></div>
+<div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe" required/></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Email</label><input type="email" placeholder="john@example.com" required/></div>
+<div class="form-group"><label>Phone</label><input type="tel" placeholder="(231) 000-0000" required/></div>
+</div>
+<div class="form-group"><label>Unit of Interest</label><select id="unitSelect"><option value="">Loading...</option></select></div>
+<div class="form-group"><label>Message</label><textarea placeholder="Tell us about yourself..." rows="4"></textarea></div>
+<button type="submit" class="btn btn-primary">Submit Application</button>
+</form>
+<div id="apply-success" class="success-msg" style="display:none">&#9989; Thank you! We will be in touch within 1 business day.</div>
+</div>
+</section>
+<section class="section" id="contact">
+<div class="container">
+<div class="section-header"><h2>Contact Us</h2><p>Have questions? We are here to help.</p></div>
+<div class="contact-grid">
+<div class="contact-card"><span class="contact-icon">&#128222;</span><h3>Phone</h3><p>(231) 412-0630</p></div>
+<div class="contact-card"><span class="contact-icon">&#9993;</span><h3>Email</h3><p>management@northernholding.com</p></div>
+<div class="contact-card"><span class="contact-icon">&#128205;</span><h3>Service Area</h3><p>Northern Michigan</p></div>
+<div class="contact-card"><span class="contact-icon">&#128336;</span><h3>Office Hours</h3><p>Mon-Fri: 9am-5pm</p></div>
+</div>
+</div>
+</section>
+<footer class="footer">
+<div class="footer-inner">
+<div class="footer-brand"><span class="logo-text">Northern <strong>Holding</strong></span><p>Professional property management across Northern Michigan.</p></div>
+<div class="footer-links"><h4>Quick Links</h4><a href="index.html">Home</a><a href="available.html">Available Units</a><a href="#apply">Apply to Rent</a><a href="#contact">Contact</a></div>
+<div class="footer-links"><h4>Communities</h4><span>Mancelona</span><span>East Jordan</span><span>St. Helen</span><span>Roscommon</span><span>Gaylord</span><span>Kalkaska</span></div>
+</div>
+<div class="footer-bottom"><p>2026 Northern Holding. All rights reserved.</p></div>
+</footer>
+<script>
+function submitApp(e){e.preventDefault();document.querySelector('.apply-form').style.display='none';document.getElementById('apply-success').style.display='block';}
+function buildCard(u){return '<div class="unit-card"><div class="unit-header"><h3>'+u.name+'</h3>'+(u.type?'<span class="unit-badge">'+u.type+'</span>':'')+'</div><div class="unit-details">'+(u.beds?'<span>'+u.beds+' Bed</span>':'')+(u.baths?'<span>'+u.baths+' Bath</span>':'')+(u.sqft?'<span>'+u.sqft+' sqft</span>':'')+'</div>'+(u.rent?'<div class="unit-rent">$'+u.rent+'<span>/mo</span></div>':'<div class="unit-rent">Contact for price</div>')+(u.utilities?'<div class="unit-util">+$'+u.utilities+'/mo utilities</div>':'')+(u.notes?'<div class="unit-notes">'+u.notes+'</div>':'')+'<div class="unit-actions">'+(u.photos?'<a href="'+u.photos+'" target="_blank" class="btn btn-sm">Photos</a>':'')+(u.video?'<a href="'+u.video+'" target="_blank" class="btn btn-outline-sm btn-sm">Video</a>':'')+'<a href="#apply" class="btn btn-primary btn-sm">Apply Now</a></div></div>';}
+async function loadPreview(){
+const container=document.getElementById('preview-units');
+const sel=document.getElementById('unitSelect');
+try{
+const res=await fetch('/api/units');
+const data=await res.json();
+const units=data.units||[];
+sel.innerHTML='<option value="">-- Select a unit --</option>'+units.map(u=>'<option value="'+u.name+'">'+u.name+(u.rent?' - $'+u.rent+'/mo':'')+'</option>').join('');
+if(!units.length){container.innerHTML='<p class="no-units">No units currently available. Check back soon!</p>';return;}
+container.innerHTML=units.slice(0,3).map(buildCard).join('');
+}catch(e){container.innerHTML='<p class="error-msg">Unable to load units. Please contact us.</p>';}
+}
+loadPreview();
+</script>
+</body>
+</html>
