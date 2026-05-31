@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Available Units - Northern Holding</title>
+<link rel="stylesheet" href="style.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<div class="topbar">
+<span>&#128222; (231) 412-0630</span>
+<span>&#128205; Northern Michigan</span>
+<span>management@northernholding.com</span>
+</div>
+<header class="navbar">
+<div class="navbar-inner">
+<a href="index.html" class="logo"><span class="logo-icon">&#127968;</span><span class="logo-text">Northern <strong>Holding</strong></span></a>
+<nav class="nav-links">
+<a href="index.html">Home</a>
+<a href="available.html" class="active">Available Units</a>
+<a href="index.html#residents">Residents</a>
+<a href="index.html#apply">Apply to Rent</a>
+<a href="index.html#contact">Contact</a>
+</nav>
+<button class="mobile-menu-btn" onclick="document.getElementById('mn').classList.toggle('open')">&#9776;</button>
+</div>
+<nav class="mobile-nav" id="mn">
+<a href="index.html">Home</a>
+<a href="available.html">Available Units</a>
+<a href="index.html#apply">Apply to Rent</a>
+<a href="index.html#contact">Contact</a>
+</nav>
+</header>
+<div class="page-hero">
+<h1>Available Units</h1>
+<p>All listings updated automatically - if it is here, it is available right now.</p>
+</div>
+<section class="section">
+<div class="container">
+<div class="filters-bar">
+<div class="filter-group"><label>Beds</label><select id="filterBeds" onchange="applyFilters()"><option value="">Any</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option></select></div>
+<div class="filter-group"><label>Type</label><select id="filterType" onchange="applyFilters()"><option value="">Any</option><option value="Single-Family">Single-Family</option><option value="Unit">Apartment/Unit</option></select></div>
+<div class="filter-group"><label>Max Rent</label><select id="filterRent" onchange="applyFilters()"><option value="">Any</option><option value="800">Up to $800</option><option value="1000">Up to $1,000</option><option value="1200">Up to $1,200</option><option value="1500">Up to $1,500</option><option value="2000">Up to $2,000</option></select></div>
+<div class="results-count" id="resultsCount"></div>
+</div>
+<div id="all-units" class="units-grid"><div class="loading"><div class="spinner"></div><p>Loading available units...</p></div></div>
+<div id="no-results" class="no-units" style="display:none">No units match your filters. <button class="btn btn-sm" onclick="clearFilters()">Clear Filters</button></div>
+</div>
+</section>
+<section class="section section-accent">
+<div class="container" style="text-align:center">
+<h2>Ready to Apply?</h2>
+<p>Found a unit you love? Submit your application and we will be in touch within 1 business day.</p>
+<a href="index.html#apply" class="btn btn-primary" style="margin-top:1rem">Apply Now</a>
+</div>
+</section>
+<footer class="footer">
+<div class="footer-inner">
+<div class="footer-brand"><span class="logo-text">Northern <strong>Holding</strong></span><p>Professional property management across Northern Michigan.</p></div>
+<div class="footer-links"><h4>Quick Links</h4><a href="index.html">Home</a><a href="available.html">Available Units</a><a href="index.html#apply">Apply to Rent</a><a href="index.html#contact">Contact</a></div>
+<div class="footer-links"><h4>Contact</h4><span>(231) 412-0630</span><span>management@northernholding.com</span></div>
+</div>
+<div class="footer-bottom"><p>2026 Northern Holding. All rights reserved.</p></div>
+</footer>
+<script>
+let allUnits=[];
+function buildCard(u){return '<div class="unit-card" data-beds="'+u.beds+'" data-type="'+u.type+'" data-rent="'+(u.rent||0)+'"><div class="unit-header"><h3>'+u.name+'</h3>'+(u.type?'<span class="unit-badge">'+u.type+'</span>':'')+'</div><div class="unit-details">'+(u.beds?'<span>'+u.beds+' Bed</span>':'')+(u.baths?'<span>'+u.baths+' Bath</span>':'')+(u.sqft?'<span>'+u.sqft+' sqft</span>':'')+(u.laundry&&u.laundry!='None'?'<span>Laundry</span>':'')+'</div>'+(u.rent?'<div class="unit-rent">$'+u.rent+'<span>/mo</span></div>':'<div class="unit-rent">Contact for price</div>')+(u.utilities?'<div class="unit-util">+$'+u.utilities+'/mo utilities</div>':'<div class="unit-util">Utilities not included</div>')+(u.notes?'<div class="unit-notes">'+u.notes+'</div>':'')+(u.renovation?'<div class="unit-notes">Renovation: '+u.renovation+'</div>':'')+'<div class="unit-actions">'+(u.photos?'<a href="'+u.photos+'" target="_blank" class="btn btn-sm">Photos</a>':'')+(u.video?'<a href="'+u.video+'" target="_blank" class="btn btn-outline-sm btn-sm">Video</a>':'')+'<a href="index.html#apply" class="btn btn-primary btn-sm">Apply Now</a></div></div>';}
+function applyFilters(){
+const beds=document.getElementById('filterBeds').value;
+const type=document.getElementById('filterType').value;
+const maxRent=parseInt(document.getElementById('filterRent').value)||99999;
+const filtered=allUnits.filter(u=>{if(beds&&u.beds!==beds)return false;if(type&&u.type!==type)return false;if(u.rent&&parseFloat(u.rent)>maxRent)return false;return true;});
+const c=document.getElementById('all-units');
+const nr=document.getElementById('no-results');
+document.getElementById('resultsCount').textContent=filtered.length+' unit'+(filtered.length===1?'':'s')+' available';
+if(!filtered.length){c.innerHTML='';nr.style.display='block';}else{nr.style.display='none';c.innerHTML=filtered.map(buildCard).join('');}
+}
+function clearFilters(){document.getElementById('filterBeds').value='';document.getElementById('filterType').value='';document.getElementById('filterRent').value='';applyFilters();}
+async function loadUnits(){
+const c=document.getElementById('all-units');
+try{
+const res=await fetch('/api/units');
+const data=await res.json();
+allUnits=data.units||[];
+if(!allUnits.length){c.innerHTML='<div class="no-units"><p>No units currently available.</p><p>Check back soon or <a href="index.html#contact">contact us</a>.</p></div>';return;}
+document.getElementById('resultsCount').textContent=allUnits.length+' unit'+(allUnits.length===1?'':'s')+' available';
+c.innerHTML=allUnits.map(buildCard).join('');
+}catch(e){c.innerHTML='<p class="error-msg">Unable to load units. Please contact us.</p>';}
+}
+loadUnits();
+</script>
+</body>
+</html>
